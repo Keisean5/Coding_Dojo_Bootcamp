@@ -1,0 +1,41 @@
+class Author(models.Model):
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+class Book(models.Model):
+    title = models.CharField(max_length=255)
+    author = models.ForeignKey(Author, related_name="books", on_delete = models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+Creating with one-to-many(adding multiple books to 1 author)
+    this_author = Author.objects.get(id=2)	# get an instance of an Author
+    my_book = Book.objects.create(title="Little Women", author=this_author)
+    # set the retrieved author as the author of a new book
+
+
+
+class Book(models.Model):
+	title = models.CharField(max_length=255)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+class Publisher(models.Model):
+	name = models.CharField(max_length=255)
+	books = models.ManyToManyField(Book, related_name="publishers")
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+this_book = Book.objects.get(id=4)	# retrieve an instance of a book
+this_publisher = Publisher.objects.get(id=2)	# retrieve an instance of a publisher
+    
+# 2 options that do the same thing:
+this_publisher.books.add(this_book)		# add the book to this publisher's list of books
+
+this_book = Book.objects.get(id=4)	# retrieve an instance of a book
+this_publisher = Publisher.objects.get(id=2)	# retrieve an instance of a publisher
+    
+# 2 options that do the same thing:
+this_publisher.books.remove(this_book)		# remove the book from this publisher's list of books
+
+this_publisher.books.all()	# get all the books this publisher is publishing
+this_book.publishers.all()	# get all the publishers for this book
